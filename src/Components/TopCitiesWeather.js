@@ -92,6 +92,4 @@ const TopCitiesWeather = () => {
   );
 };
 
-
-
 export default TopCitiesWeather;
