@@ -7,6 +7,10 @@ body {
   background-color: #060808;
 }
 
+.city-weather:hover {
+  box-shadow: 0 20px 80px -10px rgba(191, 206, 206, 0.61);
+}
+
 @layer base {
   :root {
     /* For rgb(255 115 179 / <alpha-value>) */

@@ -12,21 +12,37 @@ import { faSearch } from '@fortawesome/free-solid-svg-icons';
 const WeatherApp = () => {
 
   const [wicon, setWicon] = useState(cloud_icon);
-  const [defaultCity, setDefaultCity] = useState("Slagelse");
+  const [defaultCity, setDefaultCity] = useState("Copenhagen");
   const [weatherData, setWeatherData] = useState(null);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
     const api_key = process.env.REACT_APP_API_KEY;
 
     const fetchWeatherData = async (city) => {
-    let url = `https://api.openweathermap.org/data/2.5/weather?q=${city}&units=metric&appid=${api_key}`;
-    let response = await fetch(url);
-    let data = await response.json();
-    setWeatherData(data);
+      let url = `https://api.openweathermap.org/data/2.5/weather?q=${city}&units=metric&appid=${api_key}`;
+      try {
+        let response = await fetch(url);
+        if (!response.ok) {
+          throw new Error('Invalid Location');
+        }
+        let data = await response.json();
+        setWeatherData(data);
+        setError(null); // Reset error state if successful response
+      } catch (error) {
+        console.error('Error fetching weather data:', error.message);
+        setError('Invalid location');
+      }
     }
   
     fetchWeatherData(defaultCity);
   }, [defaultCity]);
+
+  const handleKeyPress = (event) => {
+    if (event.key === 'Enter') {
+      search();
+    }
+  };
 
   const search = async () => {
     const element = document.getElementsByClassName("cityInput")
@@ -83,17 +99,20 @@ const WeatherApp = () => {
 
   return (
     <>
-      <div className='container mx-auto sm:w-[420px] h-[100vh] text-textColor'>
+      <div className='container mx-auto sm:w-[420px] text-textColor'>
         <div className='grid grid-cols-1 justify-center sm:p-10 py-10 gap-8'>
           <div className='flex justify-center h-20'>
             <div className='flex items-center gap-4 relative'>
-              <input className='cityInput bg-backgroundColor text-textColor border rounded-full px-6 py-4 outline-none' placeholder='Search City...'></input>
+              <input className='cityInput bg-backgroundColor text-textColor border rounded-full px-6 py-4 outline-none' onKeyPress={handleKeyPress} placeholder='Search Location...'></input>
               <button className='absolute right-0 me-2 text-textColor font-bold rounded-full text-[16px] leading-none transform duration-300 ease-in-out hover:scale-150 hover:animate-pulse' onClick={() => { search() }}>
                 <FontAwesomeIcon className='p-4' icon={faSearch} />
               </button>
             </div>
           </div>
-          <div className='flex flex-col justify-between font-bold gap-20'>
+          {error && (
+            <div className="text-red-500 font-bold text-center">{error}</div>
+          )}
+          <div className='flex flex-col justify-between font-bold gap-20 cursor-default'>
             <div className='flex flex-col justify-center'>
               <div className='weather-image'>
                 <img className='mx-auto' src={wicon} alt="" />
@@ -115,7 +134,7 @@ const WeatherApp = () => {
               <div className='flex items-start gap-4'>
                 <img className='w-6 h-6' src={wind_icon} alt='Wind Icon' />
                 <div className='flex flex-col items-start font-normal'>
-                  <p className='wind-rate text-2xl leading-none'>Undefined</p>
+                  <p className='wind-rate text-2xl leading-none'></p>
                   <p className='text-sm'>Wind Speed</p>
                 </div>
               </div>
