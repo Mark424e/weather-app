@@ -66,9 +66,9 @@ const TopCitiesWeather = () => {
   };
 
   return (
-    <div className="container mx-auto my-20 hidden lg:grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 justify-items-cente text-textColor gap-6 cursor-default">
+    <div className="container mx-auto my-10 hidden lg:grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 justify-items-cente text-textColor gap-6 cursor-default">
       {weatherData.map((cityData, index) => (
-        <div key={index} className="city-weather bg-secondary flex flex-col justify-center items-center gap-4 p-4 rounded shadowshadow-lg transform duration-300 ease-in-out hover:scale-105 hover:bg-accent">
+        <div key={index} className="city-weather bg-primary/25  flex flex-col justify-center items-center gap-4 p-4 rounded shadowshadow-lg transform duration-300 ease-in-out hover:scale-105 hover:bg-primary/50">
           <h2 className='font-bold'>{cityData.name}</h2>
           <img className='w-20' src={getWeatherIcon(cityData.weather[0].icon)} alt="Weather Icon" />
           <p className='text-4xl'>{Math.round(cityData.main.temp)} °C</p>
