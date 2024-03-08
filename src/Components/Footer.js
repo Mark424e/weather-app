@@ -19,12 +19,12 @@ function Footer() {
           <div className="h-[1px] w-full bg-white mx-4"></div>
         </div>
       </div>
-      <div className='container mx-auto flex flex-col gap-2 justify-center items-center'>
+      <div className='container mx-auto pb-8 flex flex-col gap-2 justify-center items-center'>
         <h1 className="text-2xl font-bold mb-3">Weather App</h1>
         <p className='font-bold text-xs text-white/50'>Copyright &copy; 2024 Mark P. Thomassen
         </p>
       </div>
-      <div className=' mx-auto py-8 flex justify-center items-center'>
+      <div className='mx-auto pb-8 hidden md:flex justify-center items-center'>
         <ul className='flex gap-5 text-sm font-bold underline'>
           <li><p>Legal Stuff</p></li>
           <li><p>Privacy Policy</p></li>
