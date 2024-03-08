@@ -4,4 +4,54 @@
 
 body {
   font-family: 'Poppins', sans-serif;
+  background-color: #060808;
+}
+
+@layer base {
+  :root {
+    /* For rgb(255 115 179 / <alpha-value>) */
+    --color-textColor: 240 244 244;
+
+    /* For hsl(198deg 93% 60% / <alpha-value>) */
+    --color-textColor: 180deg 15% 95%;
+
+    /* For rgba(255, 115, 179, <alpha-value>) */
+    --color-textColor: 240, 244, 244;
+
+    /* For rgb(255 115 179 / <alpha-value>) */
+    --color-backgroundColor: 6 8 8;
+
+    /* For hsl(198deg 93% 60% / <alpha-value>) */
+    --color-backgroundColor: 180deg 14% 3%;
+
+    /* For rgba(255, 115, 179, <alpha-value>) */
+    --color-backgroundColor: 6, 8, 8;
+
+    /* For rgb(255 115 179 / <alpha-value>) */
+    --color-primary: 179 203 201;
+
+    /* For hsl(198deg 93% 60% / <alpha-value>) */
+    --color-primary: 175deg 19% 75%;
+
+    /* For rgba(255, 115, 179, <alpha-value>) */
+    --color-primary: 179, 203, 201;
+
+    /* For rgb(255 115 179 / <alpha-value>) */
+    --color-secondary: 80 62 91;
+
+    /* For hsl(198deg 93% 60% / <alpha-value>) */
+    --color-secondary: 277deg 19% 30%;
+
+    /* For rgba(255, 115, 179, <alpha-value>) */
+    --color-secondary: 80, 62, 91;
+
+    /* For rgb(255 115 179 / <alpha-value>) */
+    --color-accent: 152 103 143;
+
+    /* For hsl(198deg 93% 60% / <alpha-value>) */
+    --color-accent: 311deg 19% 50%;
+
+    /* For rgba(255, 115, 179, <alpha-value>) */
+    --color-accent: 152, 103, 143;
+  }
 }

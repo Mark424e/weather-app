@@ -1,11 +1,15 @@
 import React from 'react';
+import Header from './Components/Header';
 import WeatherApp from './Components/WeatherApp';
+import Footer from './Components/Footer';
 
 function App() {
   return (
-    <div className="App bg-gradient-to-t from-purple-900 to-blue-950">
+    <div className="App">
       <main>
+        <Header />
         <WeatherApp />
+        <Footer />
       </main>
     </div>
   );

@@ -1,4 +1,4 @@
-import { useState} from 'react';
+import { useState, useEffect } from 'react';
 import clear_icon from "../Components/Assets/clear.png"
 import cloud_icon from "../Components/Assets/cloud.png"
 import drizzle_icon from "../Components/Assets/drizzle.png"
@@ -12,78 +12,108 @@ import { faSearch } from '@fortawesome/free-solid-svg-icons';
 const WeatherApp = () => {
 
   const [wicon, setWicon] = useState(cloud_icon);
-  const api_key = process.env.REACT_APP_API_KEY;
+  const [defaultCity, setDefaultCity] = useState("Slagelse");
+  const [weatherData, setWeatherData] = useState(null);
+
+  useEffect(() => {
+    const api_key = process.env.REACT_APP_API_KEY;
+
+    const fetchWeatherData = async (city) => {
+    let url = `https://api.openweathermap.org/data/2.5/weather?q=${city}&units=metric&appid=${api_key}`;
+    let response = await fetch(url);
+    let data = await response.json();
+    setWeatherData(data);
+    }
+  
+    fetchWeatherData(defaultCity);
+  }, [defaultCity]);
 
   const search = async () => {
     const element = document.getElementsByClassName("cityInput")
-    if(element[0].value===""){
+    if (element[0].value === "") {
       return 0;
     }
-    let url = `https://api.openweathermap.org/data/2.5/weather?q=${element[0].value}&units=metric&appid=${api_key}`
-
-    let response = await fetch(url);
-    let data = await response.json();
-    const humidity = document.getElementsByClassName("humidity-percent");
-    const wind = document.getElementsByClassName("wind-rate");
-    const temperature = document.getElementsByClassName("weather-temp");
-    const location = document.getElementsByClassName("weather-location");
-    const description = document.getElementsByClassName("weather-description");
-
-    humidity[0].innerHTML = data.main.humidity + "%";
-    wind[0].innerHTML = Math.floor(data.wind.speed) + " m/s";
-    temperature[0].innerHTML = Math.floor(data.main.temp) + " °C";
-    location[0].innerHTML = data.name;
-    description[0].innerHTML = data.weather[0].description;
-
-    if (data.weather[0].icon==="01d" || data.weather[0].icon==="01n") {
-      setWicon(clear_icon);
-    } else if (data.weather[0].icon==="02d" || data.weather[0].icon==="02n") {
-      setWicon(cloud_icon);
-    } else if (data.weather[0].icon==="03d" || data.weather[0].icon==="03n") {
-      setWicon(drizzle_icon);
-    } else if (data.weather[0].icon==="04d" || data.weather[0].icon==="04n") {
-      setWicon(drizzle_icon);
-    } else if (data.weather[0].icon==="09d" || data.weather[0].icon==="09n") {
-      setWicon(rain_icon);
-    } else if (data.weather[0].icon==="10d" || data.weather[0].icon==="10n") {
-      setWicon(rain_icon);
-    } else if (data.weather[0].icon==="13d" || data.weather[0].icon==="13n") {
-      setWicon(snow_icon);
-    } else {
-      setWicon(snow_icon);
-    }
+    setDefaultCity(element[0].value);
   }
+
+  useEffect(() => {
+    if (weatherData) {
+      const { main, wind, name, weather } = weatherData;
+      const humidity = document.getElementsByClassName("humidity-percent");
+      const windRate = document.getElementsByClassName("wind-rate");
+      const temperature = document.getElementsByClassName("weather-temp");
+      const location = document.getElementsByClassName("weather-location");
+      const description = document.getElementsByClassName("weather-description");
+
+      humidity[0].innerHTML = main.humidity + "%";
+      windRate[0].innerHTML = Math.floor(wind.speed) + " m/s";
+      temperature[0].innerHTML = Math.floor(main.temp) + " °C";
+      location[0].innerHTML = name;
+      description[0].innerHTML = weather[0].description;
+
+      switch (weather[0].icon) {
+        case "01d":
+        case "01n":
+          setWicon(clear_icon);
+          break;
+        case "02d":
+        case "02n":
+          setWicon(cloud_icon);
+          break;
+        case "03d":
+        case "03n":
+        case "04d":
+        case "04n":
+          setWicon(drizzle_icon);
+          break;
+        case "09d":
+        case "09n":
+        case "10d":
+        case "10n":
+          setWicon(rain_icon);
+          break;
+        case "13d":
+        case "13n":
+        default:
+          setWicon(snow_icon);
+          break;
+      }
+    }
+  }, [weatherData]);
 
   return (
     <>
-      <div className='container mx-auto h-[100vh]'>
-        <div className='grid grid-cols-1 justify-center py-10 px-28 gap-8'>
-          <div className='flex justify-center items-center gap-4'>
-            <input className='cityInput border rounded-full px-6 py-4 focus:outline-none' placeholder='Search City...'></input>
-            <button onClick={()=>{search()}}>
-            <FontAwesomeIcon className='bg-white p-4 text-gray-300 font-bold rounded-full text-[24px] transform duration-300 ease-in-out hover:scale-110 hover:bg-gray-300 hover:text-white' icon={faSearch} /></button>
+      <div className='container mx-auto sm:w-[420px] h-[100vh] text-textColor'>
+        <div className='grid grid-cols-1 justify-center sm:p-10 py-10 gap-8'>
+          <div className='flex justify-center h-20'>
+            <div className='flex items-center gap-4 relative'>
+              <input className='cityInput bg-backgroundColor text-textColor border rounded-full px-6 py-4 outline-none' placeholder='Search City...'></input>
+              <button className='absolute right-0 me-2 text-textColor font-bold rounded-full text-[16px] leading-none transform duration-300 ease-in-out hover:scale-150 hover:animate-pulse' onClick={() => { search() }}>
+                <FontAwesomeIcon className='p-4' icon={faSearch} />
+              </button>
+            </div>
           </div>
-          <div className='flex flex-col justify-between text-white font-bold gap-8'>
+          <div className='flex flex-col justify-between font-bold gap-20'>
             <div className='flex flex-col justify-center'>
               <div className='weather-image'>
                 <img className='mx-auto' src={wicon} alt="" />
               </div>
               <div className='text-center'>
-                <div className='weather-temp text-7xl'>Undefined</div>
-                <div className='weather-description capitalize font-normal leading-10'>Undefined</div>
-                <div className='weather-location text-4xl font-normal'>Undefined</div>
+                <div className='weather-temp text-7xl'></div>
+                <div className='weather-description capitalize font-normal leading-10'></div>
+                <div className='weather-location text-4xl font-normal'></div>
               </div>
             </div>
             <div className='flex justify-between'>
               <div className='flex items-start gap-4'>
-                <img className='w-6 h-6' src={humidity_icon} alt='Humidity Icon'/>
+                <img className='w-6 h-6' src={humidity_icon} alt='Humidity Icon' />
                 <div className='flex flex-col items-start font-normal'>
-                  <p className='humidity-percent text-2xl leading-none'>Undefined</p>
+                  <p className='humidity-percent text-2xl leading-none'></p>
                   <p className='text-sm'>Humidity</p>
                 </div>
               </div>
               <div className='flex items-start gap-4'>
-                <img className='w-6 h-6' src={wind_icon} alt='Wind Icon'/>
+                <img className='w-6 h-6' src={wind_icon} alt='Wind Icon' />
                 <div className='flex flex-col items-start font-normal'>
                   <p className='wind-rate text-2xl leading-none'>Undefined</p>
                   <p className='text-sm'>Wind Speed</p>
