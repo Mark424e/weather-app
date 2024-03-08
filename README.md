@@ -7,3 +7,8 @@ This project was created with React.JS and uses TailwindCSS as a framework.
 ## Goal
 
 The goal of this project is to improve myself with React.JS, JavaScript, TailwindCSS and data fetching from APIs.
+
+
+## Deployment
+
+View here: https://weather-app-mark.vercel.app/
